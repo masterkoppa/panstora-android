@@ -2,11 +2,12 @@ package com.panstora;
 
 import java.util.List;
 
-//import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gcm.GCMRegistrar;
 
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -28,15 +29,15 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		
-		//GCMRegistrar.checkDevice(this);
-		//GCMRegistrar.checkManifest(this);
-		//final String regId = GCMRegistrar.getRegistrationId(this);
-		/*
+		GCMRegistrar.checkDevice(this);
+		GCMRegistrar.checkManifest(this);
+		final String regId = GCMRegistrar.getRegistrationId(this);
+		
 		if (regId.equals("")) {
 		  GCMRegistrar.register(this, SENDER_ID);
 		} else {
 		  Log.v("MainActivity", "Already registered");
-		}*/
+		}
 		
 		Uri data = getIntent().getData();
 		//Get the URI I read in
@@ -44,20 +45,27 @@ public class MainActivity extends Activity {
 			List<String> params = data.getPathSegments();
 			
 			Log.d("MainActivity", "Data URI: " + data.toString());
+			
+			for(String param : params){
+				Log.d("MainActivity", "Params: " + param);
+			}
 		}else{
-			Log.d("MainActivity", "Didn't make it");
+			Log.d("MainActivity", "Closing Application, nothing to see here folks!");
 			
 			//If I don't have a valid code, DIE!
 			finish();
 		}
 		
+		//Get the shared preferences
+		SharedPreferences storage = this.getSharedPreferences("DB", 0);
+		
+		String dev_id = "?dev_id=" + storage.getString("registration", "0");
 		
 		myWebView = (WebView) findViewById(R.id.webView1);
 		WebSettings webSettings = myWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		myWebView.setWebViewClient(new WebViewClient()); 
-		myWebView.loadUrl("http://andresjruiz.com");
-		
+		myWebView.loadUrl(data.toString() + dev_id);// ?dev_id=
 		
 		String android_id = Secure.getString(getBaseContext().getContentResolver(),
                 Secure.ANDROID_ID);
