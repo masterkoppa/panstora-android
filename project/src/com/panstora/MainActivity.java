@@ -1,5 +1,7 @@
 package com.panstora;
 
+import com.google.android.gcm.GCMRegistrar;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -13,12 +15,24 @@ import android.provider.Settings.Secure;
 public class MainActivity extends Activity {
 
 	WebView myWebView;
+	
+	private static final String SENDER_ID = "794813012353";
 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		GCMRegistrar.checkDevice(this);
+		GCMRegistrar.checkManifest(this);
+		final String regId = GCMRegistrar.getRegistrationId(this);
+		/*
+		if (regId.equals("")) {
+		  GCMRegistrar.register(this, SENDER_ID);
+		} else {
+		  Log.v("MainActivity", "Already registered");
+		}*/
 		
 		myWebView = (WebView) findViewById(R.id.webView1);
 		WebSettings webSettings = myWebView.getSettings();
