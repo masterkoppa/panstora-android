@@ -14,7 +14,7 @@ import android.provider.Settings.Secure;
 
 public class MainActivity extends Activity {
 
-	WebView myWebView;
+	private WebView myWebView;
 	
 	private static final String SENDER_ID = "794813012353";
 
@@ -51,8 +51,11 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.main, menu);
+		
 		return true;
 	}
+	
+	
 	
 	
 	@Override
