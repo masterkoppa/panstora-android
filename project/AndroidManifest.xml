@@ -33,7 +33,7 @@
           		<action android:name="android.intent.action.VIEW" />
           		<category android:name="android.intent.category.DEFAULT" />
           		<category android:name="android.intent.category.BROWSABLE" />
-          		<data android:scheme="http" android:host="andresjruiz.com" />
+          		<data android:scheme="http" android:host="panstora.ryansb.com" />
             </intent-filter>
         </activity>
         <receiver android:name="com.google.android.gcm.GCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
