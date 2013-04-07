@@ -1,12 +1,12 @@
 package com.panstora;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -16,16 +16,23 @@ public class GCMIntentService extends GCMBaseIntentService {
 	private static int id = 1000;
 	private String title;
 	private String messages;
+	private String url;
 	@Override
 	protected void onMessage(Context context, Intent intent) {
 		
 		Log.d("Panstora", "Got the message");
 		
 		String action = intent.getAction();
+		
+		Log.d("Panstora", action);
 	    if ("com.google.android.c2dm.intent.RECEIVE".equals(action)) {          
-	        String message = intent.getStringExtra("data"); 
-	        parse_json_add(message);
+	        title = intent.getStringExtra("title");
+	        messages = intent.getStringExtra("message");
+	        url = intent.getStringExtra("url");
 	    }
+	    
+	    Intent i = new Intent(Intent.ACTION_VIEW);
+	    i.setData(Uri.parse(url));
 		
 		
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
@@ -33,33 +40,29 @@ public class GCMIntentService extends GCMBaseIntentService {
 			.setContentTitle(title)
 			.setContentText(messages);
 		
-		
-		
-		//notificationBuilder.build();
+		// The stack builder object will contain an artificial back stack for the
+		// started Activity.
+		// This ensures that navigating backward from the Activity leads out of
+		// your application to the Home screen.
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		// Adds the back stack for the Intent (but not the Intent itself)
+		stackBuilder.addParentStack(MainActivity.class);
+		// Adds the Intent that starts the Activity to the top of the stack
+		stackBuilder.addNextIntent(i);
+		PendingIntent pendingIntent =
+		        stackBuilder.getPendingIntent(
+		            0,
+		            PendingIntent.FLAG_UPDATE_CURRENT
+		        );
+
 		
 		NotificationManager mNotificationManager =
 			    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
+		notificationBuilder.setContentIntent(pendingIntent);
 		mNotificationManager.notify(id, notificationBuilder.build());
 		
 		id++;
-		
-		
-		
-	}
-	
-	private void parse_json_add(String text) {
-	    if (text!= null) 
-	    { 
-	         JSONObject temp;
-			try {
-				temp = new JSONObject(text);
-				title = temp.get("title").toString();
-				messages = temp.get("message").toString();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}    
-	    }
 	}
 
 	@Override

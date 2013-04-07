@@ -12,7 +12,8 @@ conn = gcm.GCM(apikey)
 # In the future, this will have to be changed
 data = {
     "title": "HELLO, WORLD!",
-    "message": "Hello to Java from Python!"
+    "message": "Hello to Java from Python!",
+    "url": "http://andresjruiz.com"
 }
 msg = gcm.JSONMessage(regid, data)
 try:
